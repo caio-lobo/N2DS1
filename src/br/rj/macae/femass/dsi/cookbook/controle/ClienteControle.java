@@ -10,6 +10,7 @@ import br.rj.macae.femass.dsi.cookbook.jpa.ClienteE;
 import br.rj.macae.femass.dsi.cookbook.jpa.QuartoE;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -76,6 +77,22 @@ public class ClienteControle {
     public void getClientePorEmail(String text) throws SQLException {
        ClienteDAO dao = new ClienteDAO();
        ClienteE c = (ClienteE) dao.listarPorEmail(text);
+    }
+
+    public List listarTodos() throws SQLException {
+     ClienteDAO dao = new ClienteDAO();
+     return dao.listarTodos();
+             }
+
+    public void atualizarCbb(JComboBox<Object> cbbCliente) throws SQLException {
+    cbbCliente.removeAllItems();
+    ClienteDAO dao = new ClienteDAO();
+    List dados = dao.listarTodos();
+    
+    for(Object o : dados){
+        cbbCliente.addItem(o);
+    }
+    
     }
     
 }

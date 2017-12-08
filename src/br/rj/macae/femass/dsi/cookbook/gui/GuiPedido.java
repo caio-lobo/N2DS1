@@ -5,9 +5,13 @@
  */
 package br.rj.macae.femass.dsi.cookbook.gui;
 
+import br.rj.macae.femass.dsi.cookbook.controle.CategoriaControle;
+import br.rj.macae.femass.dsi.cookbook.controle.ClienteControle;
 import br.rj.macae.femass.dsi.cookbook.controle.PedidoControle;
 import br.rj.macae.femass.dsi.cookbook.controle.QuartoControle;
 import br.rj.macae.femass.dsi.cookbook.controle.ReceitaControle;
+import br.rj.macae.femass.dsi.cookbook.jpa.CategoriaE;
+import br.rj.macae.femass.dsi.cookbook.jpa.ClienteE;
 import br.rj.macae.femass.dsi.cookbook.jpa.PedidoE;
 import br.rj.macae.femass.dsi.cookbook.jpa.QuartoE;
 import br.rj.macae.femass.dsi.cookbook.jpa.ReceitaE;
@@ -17,6 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -58,7 +63,7 @@ public class GuiPedido extends javax.swing.JInternalFrame {
         txtNumero = new javax.swing.JTextField();
         txtOrigem = new javax.swing.JTextField();
         txtDestino = new javax.swing.JTextField();
-        cbbcliente = new javax.swing.JComboBox<>();
+        cbbCliente = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         cbbPedidos = new javax.swing.JComboBox<>();
         btmNovo = new javax.swing.JButton();
@@ -116,8 +121,18 @@ public class GuiPedido extends javax.swing.JInternalFrame {
         });
 
         btmRemoveReceita.setText("-");
+        btmRemoveReceita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btmRemoveReceitaActionPerformed(evt);
+            }
+        });
 
         btmSalvar.setText("Salvar");
+        btmSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btmSalvarActionPerformed(evt);
+            }
+        });
 
         btmCancelar.setText("Cancelar");
         btmCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,9 +149,9 @@ public class GuiPedido extends javax.swing.JInternalFrame {
 
         txtDestino.setText("jTextField3");
 
-        cbbcliente.addItemListener(new java.awt.event.ItemListener() {
+        cbbCliente.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbbclienteItemStateChanged(evt);
+                cbbClienteItemStateChanged(evt);
             }
         });
 
@@ -180,6 +195,18 @@ public class GuiPedido extends javax.swing.JInternalFrame {
 
         jLabel8.setText("Receita");
 
+        cbbCategoria.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbCategoriaItemStateChanged(evt);
+            }
+        });
+
+        cbbReceita.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbReceitaItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -213,7 +240,7 @@ public class GuiPedido extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel4)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cbbcliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(cbbCliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(btmAddReceita)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -276,7 +303,7 @@ public class GuiPedido extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(cbbcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -299,6 +326,8 @@ public class GuiPedido extends javax.swing.JInternalFrame {
 
     private void btmAddReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmAddReceitaActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tblReceitas.getModel();
+        model.insertRow(tblReceitas.getRowCount(), (Object[]) cbbReceita.getSelectedItem());
        
     }//GEN-LAST:event_btmAddReceitaActionPerformed
 
@@ -361,15 +390,19 @@ public class GuiPedido extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btmRemoverActionPerformed
 
-    private void cbbclienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbclienteItemStateChanged
+    private void cbbClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbClienteItemStateChanged
         // TODO add your handling code here:
         limparCampos();
-        QuartoE q = (QuartoE) cbbcliente.getSelectedItem();
-        listarCbbPedido(q.getPedidos());
-        cbbPedidos.setEnabled(true);
-        btmQuartoSelecionadoSet();
+        ClienteE q = (ClienteE) cbbCliente.getSelectedItem();
         
-    }//GEN-LAST:event_cbbclienteItemStateChanged
+        try {
+            listarCbbPedido(q.getId());
+        } catch (SQLException ex) {
+            Logger.getLogger(GuiPedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        btmClienteSelecionadoSet();
+        
+    }//GEN-LAST:event_cbbClienteItemStateChanged
 
     private void cbbPedidosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbPedidosItemStateChanged
         // TODO add your handling code here:
@@ -385,6 +418,51 @@ public class GuiPedido extends javax.swing.JInternalFrame {
         desabilitarCbbsReceitas();
     }//GEN-LAST:event_btmCancelarActionPerformed
 
+    private void cbbCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbCategoriaItemStateChanged
+        // TODO add your handling code here:
+        if(cbbCategoria.getSelectedItem().getClass() ==CategoriaE.class ){
+            CategoriaE c = (CategoriaE) cbbCategoria.getSelectedItem();
+            listarCbbReceitas(c.getId());
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_cbbCategoriaItemStateChanged
+
+    private void cbbReceitaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbReceitaItemStateChanged
+        // TODO add your handling code here:
+        
+        btmReceitaSelecionadaSet();
+        
+    }//GEN-LAST:event_cbbReceitaItemStateChanged
+
+    private void btmRemoveReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmRemoveReceitaActionPerformed
+        // TODO add your handling code here:
+        tblReceitas.remove(tblReceitas.getSelectedRow());
+    }//GEN-LAST:event_btmRemoveReceitaActionPerformed
+
+    private void btmSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmSalvarActionPerformed
+        // TODO add your handling code here:
+        PedidoControle controle = new PedidoControle();
+        try {
+        PedidoE p = new PedidoE();
+        
+        p.setId(txtNumero.getText().equals("")?null:Long.parseLong(txtNumero.getText()));
+        p.setEndereco(txtDestino.getText());
+        p.setOrigem((ClienteE) cbbCliente.getSelectedItem());
+        p.setPedido((List<ReceitaE>) tblReceitas.getModel());
+        
+            controle.gravar(p);
+        } catch (SQLException ex) {
+            Logger.getLogger(GuiPedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        limparCampos();
+        btmStartSet();
+        
+        
+    }//GEN-LAST:event_btmSalvarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btmAddReceita;
@@ -396,9 +474,9 @@ public class GuiPedido extends javax.swing.JInternalFrame {
     private javax.swing.JButton btmSair;
     private javax.swing.JButton btmSalvar;
     private javax.swing.JComboBox<Object> cbbCategoria;
+    private javax.swing.JComboBox<Object> cbbCliente;
     private javax.swing.JComboBox<Object> cbbPedidos;
     private javax.swing.JComboBox<Object> cbbReceita;
-    private javax.swing.JComboBox<Object> cbbcliente;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -415,39 +493,54 @@ public class GuiPedido extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void limparCampos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    txtDestino.setText("");
+    txtNumero.setText("");
+    txtOrigem.setText("");
+    
+    txtDestino.setEnabled(false);
+    txtNumero.setEnabled(false);
+    txtOrigem.setEnabled(false);
     }
 
     private void habilitarCampos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    txtDestino.setEnabled(true);
+    txtNumero.setEnabled(true);
+    txtOrigem.setEnabled(true);
     }
 
     private void listarCbbCategoria() throws SQLException {
      ReceitaControle controle = new ReceitaControle();
         List categorias = controle.listarCategorias();
+        cbbCategoria.setEnabled(true);
         cbbCategoria.removeAllItems();
+        
         for(Object o:categorias){
             cbbCategoria.addItem(o);
         }
     
     }
 
-    private void listarCbbPedido(List<PedidoE> pedidos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void listarCbbQuartos() throws SQLException {
-    QuartoControle controle = new QuartoControle();
-        List categorias = controle.listarQuartosCbb();
-        cbbcliente.removeAllItems();
-        for(Object o:categorias){
-            cbbCategoria.addItem(o);
+    private void listarCbbPedido(long cliente) throws SQLException {
+        
+        cbbPedidos.setEnabled(true);
+        PedidoControle controle = new PedidoControle();
+        List pedido = controle.getReceitas(cliente);
+        cbbPedidos.removeAllItems();
+        for(Object o : pedido){
+            cbbPedidos.addItem(o);
         }
+                
+        
     }
 
-    private void listarReceitasPedido(List<ReceitaE> pedido) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void listarCbbCliente() throws SQLException {
+    ClienteControle controle = new ClienteControle();
+        
+        controle.atualizarCbb(cbbCliente);
+        
     }
+
+    
 
     private void btmEditSet() {
         btmAlterar.setEnabled(false);
@@ -475,7 +568,7 @@ public class GuiPedido extends javax.swing.JInternalFrame {
     
     }
 
-    private void btmQuartoSelecionadoSet() {
+    private void btmClienteSelecionadoSet() {
      btmAlterar.setEnabled(false);
      btmCancelar.setEnabled(false);
      btmNovo.setEnabled(true);
@@ -496,15 +589,41 @@ public class GuiPedido extends javax.swing.JInternalFrame {
      btmSalvar.setEnabled(false);
      btmAddReceita.setEnabled(false);
      btmRemoveReceita.setEnabled(false);
+     
+     desabilitarCbbsReceitas();
+     cbbPedidos.setEnabled(false);
     
     }
 
     private void StartSet() throws SQLException {
     
         limparCampos();
-        listarCbbQuartos();
+        listarCbbCliente();
     
         btmStartSet();
     
+    }
+
+    private void listarCbbReceitas(Long id) {
+    
+        
+        cbbReceita.setEnabled(true);
+        CategoriaControle controle = new CategoriaControle();
+        
+        List receitas = controle.getReceitas(id);
+        cbbReceita.removeAllItems();
+        for(Object o : receitas){
+            cbbReceita.addItem(o);
+        }
+    
+    }
+
+    private void btmReceitaSelecionadaSet() {
+     btmAddReceita.setEnabled(true);
+    
+    }
+
+    private void listarReceitasPedido(List<ReceitaE> pedido) {//quando seleciono o pedido pra editar
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -154,10 +154,16 @@ public class principal extends javax.swing.JFrame {
 
     private void btmPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmPedidoActionPerformed
         // TODO add your handling code here:
-        GuiPedido guiPedido = new GuiPedido();
-        guiPedido.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        guiPedido.setVisible(true);
-        painelPrincipal.add(guiPedido);
+        GuiPedido guiPedido;
+        try {
+            guiPedido = new GuiPedido();
+            guiPedido.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            guiPedido.setVisible(true);
+            painelPrincipal.add(guiPedido);
+        } catch (SQLException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btmPedidoActionPerformed
 
     private void btmClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmClienteActionPerformed
@@ -176,10 +182,16 @@ public class principal extends javax.swing.JFrame {
 
     private void btmQuartoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmQuartoActionPerformed
         // TODO add your handling code here:
-        GuiQuartos guiQuartos = new GuiQuartos();
-        guiQuartos.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        guiQuartos.setVisible(true);
-        painelPrincipal.add(guiQuartos);
+        GuiQuartos guiQuartos;
+        try {
+            guiQuartos = new GuiQuartos();
+            guiQuartos.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            guiQuartos.setVisible(true);
+            painelPrincipal.add(guiQuartos);
+        } catch (SQLException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btmQuartoActionPerformed
 
     

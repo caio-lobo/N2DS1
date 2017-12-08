@@ -6,6 +6,7 @@
 package br.rj.macae.femass.dsi.cookbook.controle;
 
 
+import br.rj.macae.femass.dsi.cookbook.dao.ClienteDAO;
 import br.rj.macae.femass.dsi.cookbook.dao.QuartoDAO;
 import br.rj.macae.femass.dsi.cookbook.jpa.ClienteE;
 import br.rj.macae.femass.dsi.cookbook.jpa.QuartoE;
@@ -72,8 +73,8 @@ public class QuartoControle {
         return c;       
     }
 
-    public List listarQuartosCbb() throws SQLException {
-      QuartoDAO dao = new QuartoDAO();
+    public List listarClientesCbb() throws SQLException {
+      ClienteDAO dao = new ClienteDAO();
       return dao.listarTodos();
     }
     

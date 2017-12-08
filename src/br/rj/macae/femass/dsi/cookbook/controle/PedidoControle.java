@@ -67,6 +67,14 @@ public class PedidoControle {
         PedidoE c = (PedidoE)dao.listarPorId(id);
         return c;       
     }
+
+    public List getReceitas(long cliente) throws SQLException {
+            PedidoDAO pdao = new PedidoDAO();
+            return pdao.listarReceitas(cliente);
+            
+                    
+            
+            }
     
     
     

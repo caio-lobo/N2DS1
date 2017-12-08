@@ -7,9 +7,14 @@ package br.rj.macae.femass.dsi.cookbook.controle;
 
 import br.rj.macae.femass.dsi.cookbook.dao.CategoriaDAO;
 import br.rj.macae.femass.dsi.cookbook.jpa.CategoriaE;
-import br.rj.macae.femass.dsi.cookbook.modelo.Categoria;
+import br.rj.macae.femass.dsi.cookbook.jpa.ReceitaE;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -65,4 +70,25 @@ public class CategoriaControle{
         CategoriaE c = (CategoriaE)dao.listarPorId(id);
         return c;       
     }
+
+    public List getReceitas(Long id) {
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("cookbookPU");
+        EntityManager em = emf.createEntityManager();
+        
+        TypedQuery<ReceitaE> query = em.createQuery("select c from ReceitaE c", ReceitaE.class);
+        
+        List<ReceitaE> list = query.getResultList();
+        List<ReceitaE> result = new ArrayList<>();
+        result.clear();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getCategoria().getId() == id){
+                result.add(list.get(i));
+            }
+            
+        }
+        
+        
+        em.close();
+        emf.close();
+        return result;}
 }

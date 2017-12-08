@@ -7,6 +7,7 @@ package br.rj.macae.femass.dsi.cookbook.dao;
 
 import br.rj.macae.femass.dsi.cookbook.jpa.PedidoE;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -96,5 +97,29 @@ public class PedidoDAO implements IDAO{
         em.close();
         emf.close();
         return list; }
+
+   public List listarReceitas(long cliente) {
+     
+       EntityManagerFactory emf = Persistence.createEntityManagerFactory("cookbookPU");
+        EntityManager em = emf.createEntityManager();
+        
+        TypedQuery<PedidoE> query = em.createQuery("select c from PedidoE c", PedidoE.class);
+        
+        List<PedidoE> list = query.getResultList();
+        List<PedidoE> result = new ArrayList<>();
+        result.clear();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getOrigem().getId() == cliente){
+                result.add(list.get(i));
+            }
+            
+        }
+        
+        
+        em.close();
+        emf.close();
+        return result;
+   
+   }
     
 }
